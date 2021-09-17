@@ -21,6 +21,15 @@ cabeza.color("white")
 cabeza.penup()
 cabeza.goto(0,0)
 cabeza.direction = "stop"
+cuerpo = []
+
+#alimento--------------------------------------------------------------------------
+alimento = turtle.Turtle()
+alimento.speed(0)
+alimento.shape("circle")
+alimento.color("red")
+alimento.penup()
+alimento.goto(0,100)
 
 
 #Funciones-----------------------------------------------------------------
@@ -65,6 +74,44 @@ def juego():
 
     while True:
         wn.update()
+        
+        
+        #coliciones con los bordes
+        if cabeza.xcor() > 280 or cabeza.xcor() < -280 or cabeza.ycor() > 280 or cabeza.ycor() < -280:
+            time.sleep(1)
+            alimento.goto(0,100)
+            cabeza.goto(0,0)
+            cabeza.direction = "stop"
+            for c in cuerpo:
+                c.hideturtle()
+            cuerpo.clear()
+            
+        
+        if cabeza.distance(alimento) < 20 :
+            x = random.randint(-280,280)
+            y = random.randint(-280,280)
+            alimento.goto(x,y)
+
+            c = turtle.Turtle()
+            c.speed(0)
+            c.shape("square")
+            c.color("grey")
+            c.penup()
+            cuerpo.append(c)
+        
+        #mover el cuerpo
+        segmentos = len(cuerpo)
+        for i in range(segmentos - 1, 0, -1):
+            x = cuerpo[i - 1].xcor()
+            y = cuerpo[i - 1].ycor()
+            cuerpo[i].goto(x,y)
+        if segmentos > 0:
+            x = cabeza.xcor()
+            y = cabeza.ycor()
+            cuerpo[0].goto(x,y)
+        
+            
+        
         mov()
         time.sleep(posponer)
 
