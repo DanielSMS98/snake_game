@@ -31,6 +31,15 @@ alimento.color("red")
 alimento.penup()
 alimento.goto(0,100)
 
+#PUNTOS
+tex = turtle.Turtle()
+tex.speed(0)
+tex.color("white")
+tex.penup()
+tex.hideturtle()
+tex.goto(0,260)
+tex.write("Score: 0     High Score: 0",align="center",font=("Courier", 24,"normal"))
+
 
 #Funciones-----------------------------------------------------------------
 
@@ -71,13 +80,17 @@ def juego():
     wn.onkeypress(abajo,"Down")
     wn.onkeypress(izquierda,"Left")
     wn.onkeypress(derecha,"Right")
-
+    
+    #puntaje
+    high_score = 0
+    score = 0
+    
     while True:
         wn.update()
         
         
         #coliciones con los bordes
-        if cabeza.xcor() > 280 or cabeza.xcor() < -280 or cabeza.ycor() > 280 or cabeza.ycor() < -280:
+        if cabeza.xcor() > 275 or cabeza.xcor() < -275 or cabeza.ycor() > 250 or cabeza.ycor() < -275:
             time.sleep(1)
             alimento.goto(0,100)
             cabeza.goto(0,0)
@@ -85,11 +98,29 @@ def juego():
             for c in cuerpo:
                 c.hideturtle()
             cuerpo.clear()
+            score = 0
+            tex.clear()
+            tex.write(f"Score: {score}      High Score: {high_score}",
+            align="center",font=("Courier", 24,"normal"))
             
-        
+        #colision con el cuerpo
+        for c in cuerpo:
+            if c.distance(cabeza) < 20:
+                time.sleep(1)
+                alimento.goto(0,100)
+                cabeza.goto(0,0)
+                cabeza.direction = "stop"
+                for p in cuerpo:
+                    p.hideturtle()
+                cuerpo.clear()
+                score = 0
+                tex.clear()
+                tex.write(f"Score: {score}      High Score: {high_score}",
+                align="center",font=("Courier", 24,"normal"))
+
         if cabeza.distance(alimento) < 20 :
             x = random.randint(-280,280)
-            y = random.randint(-280,280)
+            y = random.randint(-280,250)
             alimento.goto(x,y)
 
             c = turtle.Turtle()
@@ -98,7 +129,14 @@ def juego():
             c.color("grey")
             c.penup()
             cuerpo.append(c)
-        
+            #aumentar marcador
+            score += 10
+            if score > int(high_score):
+                high_score = score
+            tex.clear()
+            tex.write(f"Score: {score}      High Score: {high_score}",
+            align="center",font=("Courier", 24,"normal"))
+
         #mover el cuerpo
         segmentos = len(cuerpo)
         for i in range(segmentos - 1, 0, -1):
